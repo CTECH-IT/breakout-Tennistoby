@@ -13,6 +13,21 @@ let paddleHeight = 10;
 let paddleWidth = 70;
 let paddleX = (canvas.width - paddleWidth) / 2;
 
+let brickRowCount = 3;
+let brickColumnCount = 5;
+let brickWidth = 75;
+let brickHeight = 20;
+let brickPadding = 10;
+let brickOffsetTop = 30;
+let brickOffsetLeft = 30;
+let bricks = [];
+for (let c=0; c < brickColumnCount; c++) {
+    bricks[c] = [];
+    for(let r=0; r < brickRowCount; r++) {
+        bricks[c][r] = { x:0, y: 0};
+    }
+}
+
 function drawBall() {
     ctx.beginPath();
     ctx.arc(x, y, 10, 0, ballRadius, 0, Math.PI*2);
@@ -28,6 +43,23 @@ function drawPaddle() {
     ctx.fill();
     ctx.closePath();
 
+}
+
+function drawBricks() {
+    for(let c=0; c<brickColumnCount; c++) {
+        for(let r=0; r<brickRowCount; r++) {
+            let brickX = (c*(brickWidth+brickPadding)) + brickOffsetLeft; 
+            let brickY = (r*(brickHeight+brickPadding)) + brickOffsetTop; 
+            bricks[c][r].x = brickX; 
+            bricks[c][r].y = brickY; 
+            ctx.beginPath();
+            ctx.rect(brickX, brickY, brickWidth, brickHeight); 
+            ctx.fillStyle = "magenta"; 
+            ctx.fill(); 
+            ctx.closePath(); 
+        }
+
+    }
 }
 
 function keyDownHandler(e) {
@@ -52,6 +84,7 @@ function draw() {
    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    drawBricks();
     drawBall();
     
 
