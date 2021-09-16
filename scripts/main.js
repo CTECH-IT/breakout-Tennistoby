@@ -3,19 +3,19 @@ let ctx = canvas.getContext("2d");
 
 let x = canvas.width/2;
 let y = canvas.height - 30;
-let dx = 2;
-let dy = -2;
+let dx = 1;
+let dy = -1;
 let ballRadius = 10;
 let rightPressed = false; 
 let leftPressed = false; 
 
 let paddleHeight = 10; 
-let paddleWidth = 75;
+let paddleWidth = 70;
 let paddleX = (canvas.width - paddleWidth) / 2;
 
 function drawBall() {
     ctx.beginPath();
-    ctx.arc(x, y, 20, 0, ballRadius, 0, Math.PI*2);
+    ctx.arc(x, y, 10, 0, ballRadius, 0, Math.PI*2);
     ctx.fillStyle = "magenta"; 
     ctx.fill(); 
     ctx.closePath();
@@ -24,7 +24,7 @@ function drawBall() {
 function drawPaddle() {
     ctx.beginPath();
     ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-    ctx.fillStyle = "magenta"; 
+    ctx.fillStyle = "blue"; 
     ctx.fill();
     ctx.closePath();
 
@@ -64,18 +64,26 @@ function draw() {
     if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
         dx = -dx;
     }
-    if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+   
+    if(y + dy < ballRadius) {
         dy = -dy;
+    } else if (y + dy > canvas.height - ballRadius) {
+        if(x > paddleX && x < paddleX + paddleWidth) {
+            dy = -dy;
+        }
+        alert("Game Over!");
+        document.location.reload();
+        clearInterval(interval);
     }
    
     if(rightPressed) {
-        paddleX +=7; 
+        paddleX +=3; 
         if (paddleX + paddleWidth > canvas.width) {
             paddleX = canvas.width - paddleWidth; 
         }
     }
     else if(leftPressed) {
-        paddleX -=7;
+        paddleX -=3;
         if (paddleX < 0) {
             paddleX = 0;
         }
@@ -87,5 +95,5 @@ function draw() {
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
-setInterval(draw,10);
+let interval = setInterval(draw,10);
 
