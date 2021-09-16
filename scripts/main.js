@@ -9,10 +9,13 @@ let ballRadius = 10;
 let rightPressed = false; 
 let leftPressed = false; 
 
+let paddleHeight = 10; 
+let paddleWidth = 75;
+let paddleX = (canvas.width - paddleWidth) / 2;
 
 function drawBall() {
     ctx.beginPath();
-    ctx.arc(x, y, 10, 0, ballRadius, 0, Math.PI*2);
+    ctx.arc(x, y, 20, 0, ballRadius, 0, Math.PI*2);
     ctx.fillStyle = "magenta"; 
     ctx.fill(); 
     ctx.closePath();
@@ -25,44 +28,6 @@ function drawPaddle() {
     ctx.fill();
     ctx.closePath();
 
-}
-
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    drawBall();
-
-    x+=dx;
-    y+=dy;
-
-    let ballRadius = 10;
-    let paddleHeight = 10; 
-    let paddleWidth = 75;
-    let paddleX = (canvas.width - paddleWidth) / 2;
-
-    if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-        dx = -dx;
-    }
-    if (y + dy > canvas.height - ballRadius || y - dy < ballRadius) {
-        dy = -dy;
-    }
-
-    drawPaddle();
-    // paddle controls 
-    if(rightPressed) {
-        paddleX +=7; 
-        if (paddleX + paddleWidth > canvas.width) {
-            paddleX = canvas.width - paddleWidth; 
-        }
-    }
-    else if(leftPressed) {
-        paddleX -=7;
-        if (paddleX < 0) {
-            paddleX = 0;
-        }
-    }
-
-   
 }
 
 function keyDownHandler(e) {
@@ -81,11 +46,46 @@ function keyUpHandler(e) {
     else if(e.key =="Left" || e.key == "ArrowLeft") {
         leftPressed = false;
     }
+}
+
+function draw() {
+   
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    drawBall();
+    
+
+    x+=dx;
+    y+=dy;
+
+
+    console.log(paddleX);
+
+    if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+        dx = -dx;
+    }
+    if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+        dy = -dy;
+    }
+   
+    if(rightPressed) {
+        paddleX +=7; 
+        if (paddleX + paddleWidth > canvas.width) {
+            paddleX = canvas.width - paddleWidth; 
+        }
+    }
+    else if(leftPressed) {
+        paddleX -=7;
+        if (paddleX < 0) {
+            paddleX = 0;
+        }
+    }
+    drawPaddle();
+   
+}
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
-
-}
 setInterval(draw,10);
 
