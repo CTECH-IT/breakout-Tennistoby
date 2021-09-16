@@ -9,22 +9,26 @@ let ballRadius = 10;
 
 function drawBall() {
     ctx.beginPath();
-    ctx.arc(x,y,10,0,ballRadius, Math.PI*2, false);
-    ctx.fillStyle = "0095DD"; 
+    ctx.arc(x, y, 10, 0, ballRadius, 0, Math.PI*2);
+    ctx.fillStyle = "magenta"; 
     ctx.fill(); 
     ctx.closePath();
 }
+
 function draw() {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     drawBall();
 
     x+=dx;
     y+=dy;
-    if (x>canvas.width || x<0) {
+
+    let ballRadius = 10;
+
+    if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
         dx = -dx;
     }
-    if(y>canvas.height || y<0) {
+    if (y + dy > canvas.height - ballRadius || y - dy < ballRadius) {
         dy = -dy;
     }
 }
