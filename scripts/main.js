@@ -58,18 +58,14 @@ function drawBricks() {
                 bricks[c][r].y = brickY; 
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight); 
-                brickCounter++;
-                if(brickCounter % 2 == 0) {
-                    ctx.fillStyle = "magenta";
-                } else {
-                    ctx.fillStyle = "blue";
-                }
+              
+                ctx.fillStyle = "hsl("+Date.now()*0.07%360+",80%,50%)";
+              
+                    
                 ctx.fill(); 
                 ctx.closePath(); 
             }
-            
         }
-
     }
 }
 
@@ -153,24 +149,23 @@ function draw() {
         dy = -dy;
     } else if (y + dy > canvas.height - ballRadius) {
         if(x > paddleX && x < paddleX + paddleWidth) {
-            dy = -dy;
-        } else if (lives == 1){
+            dy = -dy; }
+        else if (lives == 1){
             alert("Game Over!");
             document.location.reload();
-            clearInterval(interval);
-        } else {
+            clearInterval(interval); }
+        else {
             lives -=1;
             x = canvas.width/2;
             y = canvas.height-30;
-            dx = 2;
-            dy = -2;
+            dx = 1;
+            dy = -1;
             paddleX = (canvas.width-paddleWidth)/2;
 
         }
-
-        
     }
-   
+    console.log("lives: ", lives, " dx: ", dx, " dy: ", dy);
+
     if(rightPressed) {
         paddleX +=3; 
         if (paddleX + paddleWidth > canvas.width) {
