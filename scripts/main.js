@@ -20,6 +20,7 @@ let brickHeight = 20;
 let brickPadding = 10;
 let brickOffsetTop = 30;
 let brickOffsetLeft = 30;
+let score = 0;
 let bricks = [];
 for (let c=0; c < brickColumnCount; c++) {
     bricks[c] = [];
@@ -73,12 +74,24 @@ function collisionDetection() {
                 if (x> b.x && x < b.x + brickWidth && y > b.y && y <b.y +brickHeight) {
                     dy = -dy;
                     b.show = false;
-            
+                    score++;
+                    if (score == brickRowCount * brickColumnCount) {
+                        alert("you won, yay");
+                        document.location.reload();
+                        clearInterval(interval);
+                    }
                 }
             }
             
         }
     }
+}
+
+function drawScore() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "green"; 
+    ctx.fillText("Score: " + score, 8, 20);
+
 }
 
 function keyDownHandler(e) {
@@ -142,6 +155,7 @@ function draw() {
     }
     drawPaddle();
     collisionDetection();
+    drawScore();
 }
 
 document.addEventListener("keydown", keyDownHandler, false);
