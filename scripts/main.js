@@ -71,7 +71,7 @@ function collisionDetection() {
         for(let r=0; r < brickRowCount; r++) {
             let b = bricks[c][r];
             if (b.show ==true) {
-                if (x> b.x && x < b.x + brickWidth && y > b.y && y <b.y +brickHeight) {
+                if (x> b.x && x < b.x + brickWidth && y > b.y && y <b.y + brickHeight) {
                     dy = -dy;
                     b.show = false;
                     score++;
@@ -109,6 +109,13 @@ function keyUpHandler(e) {
     }
     else if(e.key =="Left" || e.key == "ArrowLeft") {
         leftPressed = false;
+    }
+}
+
+function mouseMoveHandler(e) {
+    let relativeX = e.clientX - canvas.offsetLeft; 
+    if (relativeX > 0 && relativeX > canvas.width) {
+        paddleX = relativeX - paddleWidth / 2;
     }
 }
 
@@ -160,6 +167,7 @@ function draw() {
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
 
 let interval = setInterval(draw,10);
 
