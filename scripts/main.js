@@ -10,7 +10,8 @@ let rightPressed = false;
 let leftPressed = false; 
 
 let paddleHeight = 10; 
-let paddleWidth = 70;
+let paddleWidth = 70; 
+
 let paddleX = (canvas.width - paddleWidth) / 2;
 
 let brickRowCount = 3;
@@ -23,7 +24,9 @@ let brickOffsetLeft = 30;
 let brickCounter = 0;
 let score = 0;
 let lives = 3;
+let levelCount = 1;
 let bricks = [];
+
 for (let c=0; c < brickColumnCount; c++) {
     bricks[c] = [];
     for(let r=0; r < brickRowCount; r++) {
@@ -39,13 +42,28 @@ function drawBall() {
     ctx.closePath();
 }
 
-function drawPaddle() {
+function drawPaddle1() {
     ctx.beginPath();
     ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
     ctx.fillStyle = "blue"; 
     ctx.fill();
     ctx.closePath();
+}
 
+function drawPaddle2() {
+    ctx.beginPath();
+    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+    ctx.fillStyle = "orange"; 
+    ctx.fill();
+    ctx.closePath();
+}
+
+function drawPaddle3() {
+    ctx.beginPath();
+    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+    ctx.fillStyle = "green"; 
+    ctx.fill();
+    ctx.closePath();
 }
 
 function drawBricks() {
@@ -58,10 +76,7 @@ function drawBricks() {
                 bricks[c][r].y = brickY; 
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight); 
-              
                 ctx.fillStyle = "hsl("+Date.now()*0.07%360+",80%,50%)";
-              
-                    
                 ctx.fill(); 
                 ctx.closePath(); 
             }
@@ -79,9 +94,30 @@ function collisionDetection() {
                     b.show = false;
                     score++;
                     if (score == brickRowCount * brickColumnCount) {
-                        alert("you won, yay");
-                        document.location.reload();
-                        clearInterval(interval);
+                        if (levelCount % 3 ==1) {
+                            alert("Onto Level 2!");
+                            document.location.reload();
+                            clearInterval(interval);
+                            paddleWidth -=20;
+                            levelCount +=1;
+                            
+                        }
+                        if (levelCount % 3==2 ) {
+                            alert("Onto Level 3!");
+                            paddleWidth -=20;
+                            levelCount +=1;
+                            document.location.reload();
+                            clearInterval(interval);
+                        }
+                        if (levelCount % 3==0) {
+                            alert("Back to Level 1!");
+                            paddleWidth = 70;
+                            document.location.reload();
+                            clearInterval(interval);
+                            levelCount +=1;
+                        }
+                        
+                        
                     }
                 }
             }
@@ -100,6 +136,24 @@ function drawLives() {
     ctx.font = "16px Arial"; 
     ctx.fillStyle = "blue"; 
     ctx.fillText("Lives: " + lives, canvas.width-80, 20 );
+}
+
+function drawLevel1() {
+    ctx.font = "16px Arial"; 
+    ctx.fillStyle = "blue"; 
+    ctx.fillText("Level: 1" , canvas.width-80, canvas.height - 20);
+}
+
+function drawLevel2() {
+    ctx.font = "16px Arial"; 
+    ctx.fillStyle = "orange"; 
+    ctx.fillText("Level: 2" + lives, canvas.width-80, canvas.height - 20);
+}
+
+function drawLevel3() {
+    ctx.font = "16px Arial"; 
+    ctx.fillStyle = "green"; 
+    ctx.fillText("Level: 3" + lives, canvas.width-80, canvas.height - 20);
 }
 
 function keyDownHandler(e) {
@@ -134,7 +188,6 @@ function draw() {
     drawBricks();
     drawBall();
     
-
     x+=dx;
     y+=dy;
 
@@ -178,7 +231,19 @@ function draw() {
             paddleX = 0;
         }
     }
-    drawPaddle();
+
+    if (levelCount % 3 == 1) {
+        drawPaddle1();
+        drawLevel1();
+
+    } else if (levelCount % 3 ==2) {
+        drawPaddle2();
+        drawLevel2();
+    } else if (levelCount %3 ==0) {
+        drawPaddle3();
+        drawLevel3();
+    }
+
     collisionDetection();
     drawScore();
     drawLives();
@@ -189,4 +254,3 @@ document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
 
 let interval = setInterval(draw,10);
-
