@@ -3,14 +3,14 @@ let ctx = canvas.getContext("2d");
 
 let x = canvas.width/2;
 let y = canvas.height - 30;
-let dx = 1;
-let dy = -1;
+let dx = 1.5;
+let dy = -1.5;
 let ballRadius = 10;
 let rightPressed = false; 
 let leftPressed = false; 
 
 let paddleHeight = 10; 
-let paddleWidth = 70; 
+let paddleWidth = 90; 
 
 let paddleX = (canvas.width - paddleWidth) / 2;
 
@@ -42,26 +42,18 @@ function drawBall() {
     ctx.closePath();
 }
 
-function drawPaddle1() {
+function drawPaddle() {
     ctx.beginPath();
     ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-    ctx.fillStyle = "blue"; 
-    ctx.fill();
-    ctx.closePath();
-}
-
-function drawPaddle2() {
-    ctx.beginPath();
-    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-    ctx.fillStyle = "orange"; 
-    ctx.fill();
-    ctx.closePath();
-}
-
-function drawPaddle3() {
-    ctx.beginPath();
-    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-    ctx.fillStyle = "green"; 
+    if (levelCount % 3 ==1) {
+        ctx.fillStyle = "blue"; 
+    }
+    if (levelCount % 3 ==1) {
+        ctx.fillStyle = "red";
+    }
+    if (levelCount % 3 ==0) {
+        ctx.fillStyle = "green";
+    }
     ctx.fill();
     ctx.closePath();
 }
@@ -84,6 +76,15 @@ function drawBricks() {
     }
 }
 
+function resetBricks() {
+    for(let c=0; c<brickColumnCount; c++) {
+        for(let r=0; r<brickRowCount; r++) {
+            bricks[c][r].show = true;
+        }
+    }
+}
+
+
 function collisionDetection() {
     for (let c=0; c< brickColumnCount; c++) {
         for(let r=0; r < brickRowCount; r++) {
@@ -96,25 +97,34 @@ function collisionDetection() {
                     if (score == brickRowCount * brickColumnCount) {
                         if (levelCount % 3 ==1) {
                             alert("Onto Level 2!");
-                            document.location.reload();
-                            clearInterval(interval);
-                            paddleWidth -=20;
+                            resetBricks();
+                            x = canvas.width/2;
+                            y = canvas.height-30;
+                            paddleWidth -=30;
                             levelCount +=1;
+                            dx = 2;
+                            dy = -2;
                             
                         }
                         if (levelCount % 3==2 ) {
                             alert("Onto Level 3!");
-                            paddleWidth -=20;
+                            resetBricks();
+                            x = canvas.width/2;
+                            y = canvas.height-30;
+                            paddleWidth -=30;
                             levelCount +=1;
-                            document.location.reload();
-                            clearInterval(interval);
+                            dx = 2.5;
+                            dy = -2.5;
                         }
                         if (levelCount % 3==0) {
                             alert("Back to Level 1!");
-                            paddleWidth = 70;
-                            document.location.reload();
-                            clearInterval(interval);
+                            resetBricks();
+                            x = canvas.width/2;
+                            y = canvas.height-30;
+                            paddleWidth = 90;
                             levelCount +=1;
+                            dx = 1.5;
+                            dy = -1.5;
                         }
                         
                         
@@ -138,23 +148,12 @@ function drawLives() {
     ctx.fillText("Lives: " + lives, canvas.width-80, 20 );
 }
 
-function drawLevel1() {
+function drawLevel() {
     ctx.font = "16px Arial"; 
     ctx.fillStyle = "blue"; 
-    ctx.fillText("Level: 1" , canvas.width-80, canvas.height - 20);
+    ctx.fillText("Level:" + (levelCount%3), canvas.width-80, canvas.height - 20);
 }
 
-function drawLevel2() {
-    ctx.font = "16px Arial"; 
-    ctx.fillStyle = "orange"; 
-    ctx.fillText("Level: 2" + lives, canvas.width-80, canvas.height - 20);
-}
-
-function drawLevel3() {
-    ctx.font = "16px Arial"; 
-    ctx.fillStyle = "green"; 
-    ctx.fillText("Level: 3" + lives, canvas.width-80, canvas.height - 20);
-}
 
 function keyDownHandler(e) {
     if(e.key == "Right" || e.key == "ArrowRight") {
@@ -211,8 +210,18 @@ function draw() {
             lives -=1;
             x = canvas.width/2;
             y = canvas.height-30;
-            dx = 1;
-            dy = -1;
+            if (levelCount % 3 ==1) {
+                dx = 1.5;
+                dy = -1.5;
+            }
+            else if (levelCount % 3 ==2) {
+                dx = 2;
+                dy = -2;
+            }
+            else if (levelCount % 3 ==0) {
+                dx = 2.5;
+                dy = -2.5;
+            }
             paddleX = (canvas.width-paddleWidth)/2;
 
         }
@@ -232,17 +241,9 @@ function draw() {
         }
     }
 
-    if (levelCount % 3 == 1) {
-        drawPaddle1();
-        drawLevel1();
-
-    } else if (levelCount % 3 ==2) {
-        drawPaddle2();
-        drawLevel2();
-    } else if (levelCount %3 ==0) {
-        drawPaddle3();
-        drawLevel3();
-    }
+    
+    drawPaddle();
+    drawLevel();
 
     collisionDetection();
     drawScore();
